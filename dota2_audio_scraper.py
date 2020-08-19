@@ -33,19 +33,14 @@ def get_audio(url):
 	names = content_location.findAll('li')
 	for aName in names:
 		if len(aName.contents) > 1:
-			if len(aName.contents) == 2:
-				file_names.append(aName.contents[1])
-
-			if len(aName.contents) == 4:
-				file_names.append(aName.contents[3])
-
-			if len(aName.contents) == 6:
-				file_names.append(aName.contents[5])
+			if "Link▶️" in aName.text:
+				aText = aName.text.replace("Link▶️", "")
+				file_names.append(aText)
 
 	print(len(file_links))
 	print(len(file_names))
 	
-
-get_audio(DOMAIN + pages[0])
+print(pages[23])
+get_audio(DOMAIN + pages[23])
 
 
