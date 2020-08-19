@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup as bs
 DOMAIN = 'https://dota2.gamepedia.com'
 URL = 'https://dota2.gamepedia.com/Category:Responses'
 FILETYPE = ".mp3"
-audio = []
+
 
 def get_soup(url) :
 	return bs(requests.get(url).text, 'html.parser')
@@ -17,15 +17,35 @@ for code in groups:
 		pages.append(link.get('href'))
 
 def get_audio(url):
-	content_location = get_soup(url).find('div', {"class", "mw-parser-output"})
-	audio_links = content_location.findAll('a')
 
+	file_links = []
+	file_names = []
+
+	content_location = get_soup(url).find('div', {"class", "mw-parser-output"})
+	
+	audio_links = content_location.findAll('a')
 	for link_loc in audio_links:
 		if link_loc.has_attr('href'):
 			link = link_loc.get('href')
 			if FILETYPE in link:
-				audio.append(link)
+				file_links.append(link)
 
-# get_audio(DOMAIN + pages[0])
+	names = content_location.findAll('li')
+	for aName in names:
+		if len(aName.contents) > 1:
+			if len(aName.contents) == 2:
+				file_names.append(aName.contents[1])
+
+			if len(aName.contents) == 4:
+				file_names.append(aName.contents[3])
+
+			if len(aName.contents) == 6:
+				file_names.append(aName.contents[5])
+
+	print(len(file_links))
+	print(len(file_names))
+	
+
+get_audio(DOMAIN + pages[0])
 
 
