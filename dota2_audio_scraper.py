@@ -1,12 +1,14 @@
 import requests
 from bs4 import BeautifulSoup as bs
 
-domain = 'https://dota2.gamepedia.com'
-my_url = 'https://dota2.gamepedia.com/Category:Responses'
-uClient = uReq(my_url)
-page_html = uClient.read()
-uClient.close()
+DOMAIN = 'https://dota2.gamepedia.com'
+URL = 'https://dota2.gamepedia.com/Category:Responses'
+FILETYPE = ".mp3"
 
-page_soup = soup(page_html, "html.parser")
+def get_soup(url) :
+	return bs(requests.get(url).text, 'html.parser')
 
-containers = page_soup.findAll("div", {"class":"mw-category-group"})
+groups = get_soup(URL).findAll('div', {"class", "mw-category-group"})
+
+for code in groups:
+	print(code.h3.text)
