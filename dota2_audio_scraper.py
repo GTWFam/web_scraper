@@ -1,6 +1,9 @@
 import requests
 import os
+from mutagen.id3 import ID3 as id3
 from bs4 import BeautifulSoup as bs
+
+from mutagen.id3 import ID3NoHeaderError, TIT3
 
 DOMAIN = 'https://dota2.gamepedia.com'
 URL = 'https://dota2.gamepedia.com/Category:Responses'
@@ -48,48 +51,53 @@ for code in groups:
 	for link in code.findAll('a'):
 		pages.append(link.get('href'))
 
-# for aPage in pages:
-# 	file_links = []
-# 	file_names = []
+for aPage in pages:
+	file_links = []
+	file_names = []
 
-# 	get_audio(DOMAIN + aPage)
+	get_audio(DOMAIN + aPage)
 
-# 	directory = rename(aPage)
-# 	path = os.path.join(PARENT_DIR, directory)
-# 	os.mkdir(path)
+	directory = rename(aPage)
+	path = os.path.join(PARENT_DIR, directory)
+	os.mkdir(path)
 
-# 	i = 0
-# 	while i < len(file_links):
-# 		n = file_names[i]
-# 		if len(n) > 255:
-# 			n = n[0:200]
+	i = 0
+	while i < len(file_links):
+		n = file_names[i]
+		if len(n) > 255:
+			n = n[0:10]
 
-# 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
-# 			response = requests.get(file_links[i])
-# 			file.write(response.content)
-# 			i += 1
+		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
+			response = requests.get(file_links[i])
+			file.write(response.content)
+		
+		with open(os.path.join(path, n) + ".txt", 'w') as file:
+			file.write(file_names[i])
 
+		i += 1
 
 # To Debug
-aPage = rename(pages[2])
+# aPage = rename(pages[2])
 
-print(aPage)
+# print(aPage)
 
-path = os.path.join(PARENT_DIR, aPage)
-os.mkdir(path)
+# path = os.path.join(PARENT_DIR, aPage)
+# os.mkdir(path)
 
-file_links = []
-file_names = []
-get_audio(DOMAIN + pages[2])
+# file_links = []
+# file_names = []
+# get_audio(DOMAIN + pages[2])
 
-n = file_names[72]
-if len(n) > 255:
-	n = n[0:200]
+# n = file_names[72]
+# if len(n) > 255:
+# 	n = n[0:10]
 
-with open(os.path.join(path, n) + FILETYPE, "wb") as file:
-	response = requests.get(file_links[72])
-	file.write(response.content)
+# with open(os.path.join(path, n) + FILETYPE, "wb") as file:
+# 	response = requests.get(file_links[72])
+# 	file.write(response.content)
 
+# with open(os.path.join(path, n) + ".txt", "w") as file:
+# 	file.write(file_names[72])
 
 
 
