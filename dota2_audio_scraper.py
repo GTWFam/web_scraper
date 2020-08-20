@@ -42,42 +42,53 @@ def rename(page):
 
 groups = get_soup(URL).findAll('div', {"class", "mw-category-group"})
 
+# Responeses pages 
 pages = []
 for code in groups:
 	for link in code.findAll('a'):
 		pages.append(link.get('href'))
 
-for aPage in pages:
-	file_links = []
-	file_names = []
+# for aPage in pages:
+# 	file_links = []
+# 	file_names = []
 
-	get_audio(DOMAIN + aPage)
+# 	get_audio(DOMAIN + aPage)
 
-	directory = rename(aPage)
-	path = os.path.join(PARENT_DIR, directory)
-	os.mkdir(path)
+# 	directory = rename(aPage)
+# 	path = os.path.join(PARENT_DIR, directory)
+# 	os.mkdir(path)
 
-	i = 0
-	while i < len(file_links):
-		with open(os.path.join(path, file_names[i]) + FILETYPE, 'wb') as file:
-			response = requests.get(file_links[i])
-			file.write(response.content)
-			i += 1
+# 	i = 0
+# 	while i < len(file_links):
+# 		n = file_names[i]
+# 		if len(n) > 255:
+# 			n = n[0:200]
 
-# aPage = rename(pages[5])
+# 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
+# 			response = requests.get(file_links[i])
+# 			file.write(response.content)
+# 			i += 1
 
-# print(aPage)
 
-# path = os.path.join(parent_dir, aPage)
-# os.mkdir(path)
+# To Debug
+aPage = rename(pages[2])
 
-# file_links = []
-# file_names = []
-# get_audio(DOMAIN + pages[0])
+print(aPage)
 
-# with open(os.path.join(path, file_names[0]) + FILETYPE, "wb") as file:
-# 	response = requests.get(file_links[0])
-# 	file.write(response.content)
+path = os.path.join(PARENT_DIR, aPage)
+os.mkdir(path)
+
+file_links = []
+file_names = []
+get_audio(DOMAIN + pages[2])
+
+n = file_names[72]
+if len(n) > 255:
+	n = n[0:200]
+
+with open(os.path.join(path, n) + FILETYPE, "wb") as file:
+	response = requests.get(file_links[72])
+	file.write(response.content)
 
 
 
