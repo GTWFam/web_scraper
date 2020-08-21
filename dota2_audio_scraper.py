@@ -26,12 +26,21 @@ def get_audio(url):
 			if FILETYPE in link:
 				file_links.append(link)
 
+
 	names = content_location.findAll('li')
 	for aName in names:
-		if len(aName.contents) > 1:
-			if "Link▶️" in aName.text:
-				aText = aName.text.replace("Link▶️", "")
-				file_names.append(aText)
+		if "Link▶️ Link▶️ Link▶️" in aName.text:
+			aText = aName.text.replace("Link▶️ Link▶️ Link▶️", "")
+			file_names.append(aText)
+			file_names.append(aText + " 2")
+			file_names.append(aText + " 3")
+		elif "Link▶️ Link▶️" in aName.text:
+			aText = aName.text.replace("Link▶️ Link▶️", "")
+			file_names.append(aText)
+			file_names.append(aText + "2")
+		elif "Link▶️" in aName.text:
+			aText = aName.text.replace("Link▶️", "")
+			file_names.append(aText)
 
 	# print(len(file_links))
 	# print(len(file_names))
@@ -41,6 +50,8 @@ def rename(page):
 	page = page.replace("/", "")
 	page = page.replace("Responses", "")
 	page = page.replace("%27", "'")
+	page = page.replace("%26", "&")
+	page = page.replace("_", " ")
 	return page
 
 groups = get_soup(URL).findAll('div', {"class", "mw-category-group"})
@@ -51,20 +62,50 @@ for code in groups:
 	for link in code.findAll('a'):
 		pages.append(link.get('href'))
 
-for aPage in pages:
+# for aPage in pages:
+# 	i = 0
+# 	file_links = []
+# 	file_names = []
+
+# 	print(aPage)
+# 	get_audio(DOMAIN + aPage)
+
+# 	directory = rename(aPage)
+# 	path = os.path.join(PARENT_DIR, directory)
+# 	os.mkdir(path)
+
+	
+# 	while i < len(file_links):
+# 		n = file_names[i]
+# 		if len(n) > 20:
+# 			n = n[0:10]
+
+# 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
+# 			response = requests.get(file_links[i])
+# 			file.write(response.content)
+		
+# 		with open(os.path.join(path, n) + ".txt", 'w') as file:
+# 			file.write(file_names[i])
+
+# 		i += 1
+# 162
+for aPage in pages[74:162]:
+	i = 0
 	file_links = []
 	file_names = []
 
+	print(aPage)
 	get_audio(DOMAIN + aPage)
 
 	directory = rename(aPage)
 	path = os.path.join(PARENT_DIR, directory)
 	os.mkdir(path)
 
-	i = 0
+	
 	while i < len(file_links):
 		n = file_names[i]
-		if len(n) > 255:
+		n = n.replace("/", "|")
+		if len(n) > 20:
 			n = n[0:10]
 
 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
