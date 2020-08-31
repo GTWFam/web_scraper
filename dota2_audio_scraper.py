@@ -89,7 +89,7 @@ for code in groups:
 
 # 		i += 1
 # 162
-for aPage in pages[74:162]:
+for aPage in pages[0:14]:
 	i = 0
 	file_links = []
 	file_names = []
@@ -101,6 +101,8 @@ for aPage in pages[74:162]:
 	path = os.path.join(PARENT_DIR, directory)
 	os.mkdir(path)
 
+	with open('heros.txt', 'a') as file:
+		file.write(directory + '\n')
 	
 	while i < len(file_links):
 		n = file_names[i]
