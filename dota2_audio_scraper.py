@@ -47,11 +47,12 @@ def get_audio(url):
 
 # Renaming the pages to create Directories
 def rename(page):
-	page = page.replace("/", "")
+	page = page.replace("/", " ")
 	page = page.replace("Responses", "")
 	page = page.replace("%27", "'")
 	page = page.replace("%26", "&")
 	page = page.replace("_", " ")
+	page = page.replace(' ', '')
 	return page
 
 groups = get_soup(URL).findAll('div', {"class", "mw-category-group"})
@@ -62,32 +63,6 @@ for code in groups:
 	for link in code.findAll('a'):
 		pages.append(link.get('href'))
 
-# for aPage in pages:
-# 	i = 0
-# 	file_links = []
-# 	file_names = []
-
-# 	print(aPage)
-# 	get_audio(DOMAIN + aPage)
-
-# 	directory = rename(aPage)
-# 	path = os.path.join(PARENT_DIR, directory)
-# 	os.mkdir(path)
-
-	
-# 	while i < len(file_links):
-# 		n = file_names[i]
-# 		if len(n) > 20:
-# 			n = n[0:10]
-
-# 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
-# 			response = requests.get(file_links[i])
-# 			file.write(response.content)
-		
-# 		with open(os.path.join(path, n) + ".txt", 'w') as file:
-# 			file.write(file_names[i])
-
-# 		i += 1
 # 162
 for aPage in pages[0:14]:
 	i = 0
@@ -107,8 +82,12 @@ for aPage in pages[0:14]:
 	while i < len(file_links):
 		n = file_names[i]
 		n = n.replace("/", "|")
+		n = n.replace(".", "")
 		if len(n) > 20:
 			n = n[0:10]
+
+		with open(path + "/auNames.txt", 'a') as file:
+			file.write(n + '\n')
 
 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
 			response = requests.get(file_links[i])
