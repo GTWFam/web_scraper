@@ -26,10 +26,15 @@ def get_audio(url):
 			if FILETYPE in link:
 				file_links.append(link)
 
-
 	names = content_location.findAll('li')
 	for aName in names:
-		if "Link▶️ Link▶️ Link▶️" in aName.text:
+		if "Link▶️ Link▶️ Link▶️ Link▶️" in aName.text:
+			aText = aName.text.replace("Link▶️ Link▶️ Link▶️ Link▶️", "")
+			file_names.append(aText)
+			file_names.append(aText + " 2")
+			file_names.append(aText + " 3")
+			file_names.append(aText + " 4")
+		elif "Link▶️ Link▶️ Link▶️" in aName.text:
 			aText = aName.text.replace("Link▶️ Link▶️ Link▶️", "")
 			file_names.append(aText)
 			file_names.append(aText + " 2")
@@ -42,18 +47,31 @@ def get_audio(url):
 			aText = aName.text.replace("Link▶️", "")
 			file_names.append(aText)
 
-	# print(len(file_links))
-	# print(len(file_names))
-
 # Renaming the pages to create Directories
 def rename(page):
-	page = page.replace("/", " ")
+	page = page.strip()
+	page = page.replace("/", "")
 	page = page.replace("Responses", "")
 	page = page.replace("%27", "'")
 	page = page.replace("%26", "&")
-	page = page.replace("_", " ")
-	page = page.replace(' ', '')
+	page = page.replace('.', '')
+	page = page.replace(':', '')
+	page = page.strip()
+	page = page.replace(' ', '_')
 	return page
+
+def check(n):
+	i = 2
+	if not n in checkArray:
+		checkArray.append(n)
+		return n
+	else:
+		while i <= 10:
+			if not n + ' (' + str(i) + ')' in checkArray:
+				n = n + ' (' + str(i) + ')'
+				checkArray.append(n)
+				return n
+			i += 1
 
 groups = get_soup(URL).findAll('div', {"class", "mw-category-group"})
 
@@ -63,16 +81,18 @@ for code in groups:
 	for link in code.findAll('a'):
 		pages.append(link.get('href'))
 
-# 162
-for aPage in pages[0:14]:
+# 166
+for aPage in pages[0:167]:
 	i = 0
 	file_links = []
 	file_names = []
+	checkArray = []
 
-	print(aPage)
+	
 	get_audio(DOMAIN + aPage)
 
 	directory = rename(aPage)
+	print(directory)
 	path = os.path.join(PARENT_DIR, directory)
 	os.mkdir(path)
 
@@ -81,12 +101,13 @@ for aPage in pages[0:14]:
 	
 	while i < len(file_links):
 		n = file_names[i]
-		n = n.replace("/", "|")
-		n = n.replace(".", "")
+		n = rename(n)
 		if len(n) > 20:
-			n = n[0:10]
+			n = n[0:30]
 
-		with open(path + "/auNames.txt", 'a') as file:
+		n = check(n )
+
+		with open(directory + '_list.txt', 'a') as file:
 			file.write(n + '\n')
 
 		with open(os.path.join(path, n) + FILETYPE, 'wb') as file:
@@ -97,30 +118,6 @@ for aPage in pages[0:14]:
 			file.write(file_names[i])
 
 		i += 1
-
-# To Debug
-# aPage = rename(pages[2])
-
-# print(aPage)
-
-# path = os.path.join(PARENT_DIR, aPage)
-# os.mkdir(path)
-
-# file_links = []
-# file_names = []
-# get_audio(DOMAIN + pages[2])
-
-# n = file_names[72]
-# if len(n) > 255:
-# 	n = n[0:10]
-
-# with open(os.path.join(path, n) + FILETYPE, "wb") as file:
-# 	response = requests.get(file_links[72])
-# 	file.write(response.content)
-
-# with open(os.path.join(path, n) + ".txt", "w") as file:
-# 	file.write(file_names[72])
-
 
 
 
